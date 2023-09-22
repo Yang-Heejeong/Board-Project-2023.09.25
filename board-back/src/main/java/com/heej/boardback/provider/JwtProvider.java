@@ -30,8 +30,9 @@ public class JwtProvider {
     }
 
     public String validate(String jwt) {
-
+        
         String email = null;
+
         try {
 
             Claims claims = Jwts.parser()
