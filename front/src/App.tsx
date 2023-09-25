@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
 import Footer from 'layouts/Footer';
 import Header from 'layouts/Header';
@@ -13,24 +13,27 @@ import User from 'views/User';
 import Container from 'layouts/Container';
 import { useEffect } from 'react';
 import axios from 'axios';
-
-function App() {
+import { useUserStore } from 'stores';
+import { useCookies } from 'react-cookie';
+import { getSignInUserRequest } from 'apis';
+import { GetSignInUserResponseDto } from 'apis/dto/response/user';
+import ResponseDto from 'apis/dto/response';
 
   // 보통 const response = await axios.get("http://localhost:4000"); 가 실행된 후 console.log(response.data); 가 실행된다.
   // 하지만 아래와 같은 경우에는 호출을 하지만 결과를 기다리지 않고 바로 다음 줄이 실행되는 비동기함수 현상이 발생하기 때문에
   // axios 앞에 await를 걸어 결과가 나올 수 있도록 기다리게 해준다.
   // 이후에 async를 사용함으로써 비동기함수를 동기함수로 변경해준다.
 
-  const serverCheck = async() => {
-    const response = await axios.get("http://localhost:4000");
-    //console.log(response.data);
-    // 함수를 반환하면 then에 매개 변수를 받을 수 있다.
-    return response.data;
-  }
+  // const serverCheck = async() => {
+  //   const response = await axios.get("http://localhost:4000");
+  //   //console.log(response.data);
+  //   // 함수를 반환하면 then에 매개 변수를 받을 수 있다.
+  //   return response.data;
+  // }
 
   // 아래는 비동기로 처리가 되기 때문에 response 처리를 기다리지 않고 바로 내보낸다.
   // 그래서 response 보다 useEffect 콘솔이 먼저 찍히게 된다.
-  useEffect(() => {
+  // useEffect(() => {
     // "Server on"이 두 번 뜨는 이유는 useEffect가 두 번 돌기 때문에 생기는 현상이다.
     // useEffect에는 async사용할수 없기 때문에 then을 사용하여 작업이 끝나면 작업이 사작할 수 있게 한다.
     // then() : 실행시켜라. 이기 때문에 함수가 들어와야 한다.
@@ -40,14 +43,50 @@ function App() {
     //   console.log('뒤에오는 콘솔');
     // });
     // 동기 함수가 실행되는 동안 예외 처리를 해줘야 한다.
-    serverCheck()
-      .then((data) => console.log(data))
-      // catch로 에러를 받는 함수 작성
-      .catch((error) => {
-        console.log(error.response.data);
-      });
-  }, []);
+    // serverCheck() // 서버체크
+    //   .then((data) => console.log(data))
+    //   // catch로 에러를 받는 함수 작성
+    //   .catch((error) => {
+    //     console.log(error.response.data);
+    //   });
+  // }, []);
 
+function App() {
+  
+  //          state: 현재 페이지 url 상태         //
+  const { pathname } = useLocation();
+  //          state: 로그인 유저 상태          //
+  const { user, setUser } = useUserStore();
+  //          state: cookie 상태          //
+  const [cookie, setCookie] = useCookies();
+
+  //          function: get sign in user response 처리 함수          //
+  const getSignInResponse = (responseBody: GetSignInUserResponseDto | ResponseDto) => {
+    const { code } = responseBody
+    if (code !== 'SU') {
+      setCookie('accessToken', '', { expires: new Date(), path: MAIN_PATH});
+      setUser(null);
+      return;
+    }
+
+    setUser({ ...responseBody as GetSignInUserResponseDto });
+
+  }
+
+  //          effect: 현재 path가 변경될때마다 실행될 함수          //
+  useEffect(() => {
+
+    const accessToken = cookie.accessToken;
+    if (!accessToken) {
+      setUser(null);
+      return;
+    }
+
+    getSignInUserRequest(accessToken).then(getSignInResponse);
+
+  }, [pathname]);
+
+  
   return (
     <Routes>
       <Route element={<Container />}>
