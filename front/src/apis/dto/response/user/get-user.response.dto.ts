@@ -3,4 +3,4 @@ import ResponseDto from "..";
 
 export default interface GetUserResponseDto extends ResponseDto, User {
     
-}
+};

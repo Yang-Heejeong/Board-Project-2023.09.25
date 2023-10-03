@@ -1,7 +1,5 @@
 package com.heej.boardback.controller;
 
-import javax.print.attribute.standard.MediaTray;
-
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +33,8 @@ public class FileController {
     public Resource getFile(
         @PathVariable("fileName") String fileName
     ) {
-        return null;
+        Resource resource = fileService.getFile(fileName);
+        return resource;
     }
-    
 
 }

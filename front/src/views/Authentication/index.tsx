@@ -9,8 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { MAIN_PATH } from 'constant';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import { signInRequest, signUpRequest } from 'apis';
-import SignUpRequestDto from 'apis/dto/request/auth/sign-up-request.dto';
-import { SignInRequestDto } from 'apis/dto/request/auth';
+import { SignInRequestDto, SignUpRequestDto } from 'apis/dto/request/auth';
 import { SignInResponseDto } from 'apis/dto/response/auth';
 import ResponseDto from 'apis/dto/response';
 
@@ -59,6 +58,7 @@ export default function Authentication() {
 
       setCookie('accessToken', token, { expires, path: MAIN_PATH });
       navigator(MAIN_PATH);
+
     }
 
     //          event handler: 이메일 인풋 key down 이벤트 처리          //
@@ -88,7 +88,7 @@ export default function Authentication() {
     //          event handler: 로그인 버튼 클릭 이벤트 처리          //
     const onSignInButtonClickHandler = () => {
       const requestBody: SignInRequestDto = {email, password};
-      signInRequest(requestBody).then(signInResponse); 
+      signInRequest(requestBody).then(signInResponse);
     }
 
     //          event handler: 회원가입 링크 클릭 이벤트 처리          //
@@ -189,7 +189,6 @@ export default function Authentication() {
 
     //          function: 다음 주소 검색 팝업 오픈 함수          //
     const open = useDaumPostcodePopup();
-
     //          function: sign up response 처리 함수          //
     const signUpResponse = (code: string) => {
       if (code === 'VF') alert('모두 입력하세요.');
@@ -203,7 +202,7 @@ export default function Authentication() {
         setNicknameErrorMessage('중복되는 닉네임 입니다.');
       }
       if (code === 'DT') {
-        setTelNumberError(true)
+        setTelNumberError(true);
         setTelNumberErrorMessage('중복되는 휴대 전화번호 입니다.');
       }
       if (code === 'DBE') alert('데이터베이스 오류입니다.');
@@ -218,6 +217,7 @@ export default function Authentication() {
       setConsent(false);
       setPage(1);
       setView('sign-in');
+
     }
 
     //          event handler: 비밀번호 아이콘 클릭 이벤트 처리          //
@@ -335,7 +335,8 @@ export default function Authentication() {
         addressDetail,
         agreedPersonal: consent
       };
-      signUpRequest(requestBody).then(signUpResponse)
+
+      signUpRequest(requestBody).then(signUpResponse);
     }
 
     //          render: sign up 카드 컴포넌트 렌더링         //
