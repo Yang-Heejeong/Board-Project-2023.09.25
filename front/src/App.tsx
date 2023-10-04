@@ -48,58 +48,58 @@ import ResponseDto from 'apis/dto/response';
     //   });
   // }, []);
 
-  function App() {
+function App() {
 
-    //          state: 현재 페이지 url 상태          //
-    const { pathname } = useLocation();
-    //          state: 로그인 유저 상태          //
-    const { user, setUser } = useUserStore();
-    //          state: cookie 상태          //
-    const [cookies, setCookie] = useCookies();
-  
-    //          function: get sign in user response 처리 함수 //
-    const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto) => {
-      const { code } = responseBody;
-      if (code !== 'SU') {
-        setCookie('accessToken', '', { expires: new Date(), path: MAIN_PATH });
-        setUser(null);
-        return;
-      }
-  
-      setUser({ ...responseBody as GetSignInUserResponseDto });
-        
+  //          state: 현재 페이지 url 상태          //
+  const { pathname } = useLocation();
+  //          state: 로그인 유저 상태          //
+  const { user, setUser } = useUserStore();
+  //          state: cookie 상태          //
+  const [cookies, setCookie] = useCookies();
+
+  //          function: get sign in user response 처리 함수 //
+  const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto) => {
+    const { code } = responseBody;
+    if (code !== 'SU') {
+      setCookie('accessToken', '', { expires: new Date(), path: MAIN_PATH });
+      setUser(null);
+      return;
     }
-  
-    //          effect: 현재 path가 변경될 때마다 실행될 함수          //
-    useEffect(() => {
-  
-      const accessToken = cookies.accessToken;
-      if (!accessToken) {
-        setUser(null);
-        return;
-      }
-  
-      getSignInUserRequest(accessToken).then(getSignInUserResponse);
-      
-    }, [pathname]);
-  
-    return (
-      <Routes>
-        <Route element={<Container />}>
-          <Route path={MAIN_PATH} element={<Main />} />
-          <Route path={AUTH_PATH} element={<Authentication />} />
-          <Route path={SEARCH_PATH(':word')} element={<Search />} />
-          <Route path={BOARD_WRITE_PATH} element={<BoardWrite />} />
-          <Route path={BOARD_DETAIL_PATH(':boardNumber')} element={<BoardDetail />} />
-          <Route path={BOARD_UPDATE_PATH(':boardNumber')} element={<BoardUpdate />} />
-          <Route path={USER_PATH(':searchEmail')} element={<User />} />
-          <Route path='*' element={<h1>404 Not Found</h1>} />
-        </Route>
-      </Routes>
-    );
+
+    setUser({ ...responseBody as GetSignInUserResponseDto });
+        
   }
-  
-  export default App;
+
+  //          effect: 현재 path가 변경될 때마다 실행될 함수          //
+  useEffect(() => {
+
+    const accessToken = cookies.accessToken;
+    if (!accessToken) {
+      setUser(null);
+      return;
+    }
+
+    getSignInUserRequest(accessToken).then(getSignInUserResponse);
+      
+  }, [pathname]);
+
+  return (
+    <Routes>
+      <Route element={<Container />}>
+        <Route path={MAIN_PATH} element={<Main />} />
+        <Route path={AUTH_PATH} element={<Authentication />} />
+        <Route path={SEARCH_PATH(':word')} element={<Search />} />
+        <Route path={BOARD_WRITE_PATH} element={<BoardWrite />} />
+        <Route path={BOARD_DETAIL_PATH(':boardNumber')} element={<BoardDetail />} />
+        <Route path={BOARD_UPDATE_PATH(':boardNumber')} element={<BoardUpdate />} />
+        <Route path={USER_PATH(':searchEmail')} element={<User />} />
+        <Route path='*' element={<h1>404 Not Found</h1>} />
+      </Route>
+    </Routes>
+  );
+}
+
+export default App;
   
   // ! 네비게이션 설계
   // ! 메인 화면 : '/' - Main
