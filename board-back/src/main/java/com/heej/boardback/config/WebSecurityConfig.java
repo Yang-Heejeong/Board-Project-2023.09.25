@@ -50,7 +50,7 @@ public class WebSecurityConfig {
 
 }
 
-class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
+class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint { 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,

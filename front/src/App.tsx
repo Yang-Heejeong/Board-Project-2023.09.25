@@ -23,8 +23,8 @@ import ResponseDto from 'apis/dto/response';
 
   // const serverCheck = async() => {
   //   const response = await axios.get("http://localhost:4000");
-  //   //console.log(response.data);
-  //   // 함수를 반환하면 then에 매개 변수를 받을 수 있다.
+  //   console.log(response.data);
+  //    함수를 반환하면 then에 매개 변수를 받을 수 있다.
   //   return response.data;
   // }
 
@@ -42,7 +42,7 @@ import ResponseDto from 'apis/dto/response';
     // 동기 함수가 실행되는 동안 예외 처리를 해줘야 한다.
     // serverCheck() // 서버체크
     //   .then((data) => console.log(data))
-    //   // catch로 에러를 받는 함수 작성
+    //   catch로 에러를 받는 함수 작성
     //   .catch((error) => {
     //     console.log(error.response.data);
     //   });
