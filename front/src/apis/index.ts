@@ -4,7 +4,8 @@ import { SignInResponseDto, SignUpResponseDto } from './dto/response/auth';
 import ResponseDto from './dto/response';
 import { GetSignInUserResponseDto, GetUserResponseDto } from './dto/response/user';
 import { PostBoardRequestDto } from './dto/request/board';
-import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto } from './dto/response/board';
+import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto } from './dto/response/board';
+import { error } from 'console';
 
 // description: Domain URL //
 const DOMAIN = 'http://localhost:4000';
@@ -59,6 +60,8 @@ const GET_FAVORITE_LIST_URL = (boardNumber: string | number) => `${API_DOMAIN}/b
 const GET_LATEST_BOARD_LIST_URL = () => `${API_DOMAIN}/board/latest-list`;
 // description: post board API end point //
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
+// description: put favorite API end point //
+const PUT_FAVORITE_URL = (boardNumber: string | number) => `${API_DOMAIN}/board/${boardNumber}/favorite`;
 
 // description: get board request //
 export const getBoardRequest = async (boardNumber: string | number) => {
@@ -107,6 +110,22 @@ export const postBoardRequest = async (requestBody: PostBoardRequestDto, token: 
     const result = await axios.post(POST_BOARD_URL(), requestBody, authorization(token))
         .then(response => {
             const responseBody: PostBoardResponseDto = response.data;
+            const { code } = responseBody;
+            return code;
+        })
+        .catch(error => {
+            const responseBody: ResponseDto = error.response.data;
+            const { code } = responseBody;
+            return code;
+        });
+    return result;
+}
+
+// description: put favorite request //
+export const putFavoriteRequest = async (boardNumber: string | number, token: string) => {
+    const result = await axios.put(PUT_FAVORITE_URL(boardNumber), {}, authorization(token))
+        .then(response => {
+            const responseBody: PutFavoriteResponseDto = response.data;
             const { code } = responseBody;
             return code;
         })
