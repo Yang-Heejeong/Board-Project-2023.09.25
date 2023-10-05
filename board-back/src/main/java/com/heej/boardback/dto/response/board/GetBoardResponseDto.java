@@ -37,7 +37,7 @@ public class GetBoardResponseDto extends ResponseDto {
         this.title = boardViewEntity.getTitle();
         this.content = boardViewEntity.getContent();
         this.boardImageList = boardImageList;
-        this.writeDatetime = boardViewEntity.getWriterDatetime() ;
+        this.writeDatetime = boardViewEntity.getWriteDatetime() ;
         this.writerEmail = boardViewEntity.getWriterEmail();
         this.writerNickname = boardViewEntity.getWriterNickname();
         this.writerProfileImage = boardViewEntity.getWriterProfileImage();

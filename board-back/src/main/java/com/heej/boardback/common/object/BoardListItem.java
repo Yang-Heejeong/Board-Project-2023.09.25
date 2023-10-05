@@ -31,7 +31,7 @@ public class BoardListItem {
         this.viewCount = boardViewEntity.getViewCount();
         this.favoriteCount = boardViewEntity.getFavoriteCount();
         this.commentCount = boardViewEntity.getCommentCount();
-        this.writerDatetime = boardViewEntity.getWriterDatetime();
+        this.writerDatetime = boardViewEntity.getWriteDatetime();
         this.writerEmail = boardViewEntity.getWriterEmail();
         this.writerNickname = boardViewEntity.getWriterNickname();
         this.writerProfileImage = boardViewEntity.getWriterProfileImage();

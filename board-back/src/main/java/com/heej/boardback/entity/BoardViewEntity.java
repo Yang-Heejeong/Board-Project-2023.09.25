@@ -22,7 +22,7 @@ public class BoardViewEntity {
     private int viewCount;
     private int favoriteCount;
     private int commentCount;
-    private String writerDatetime;
+    private String writeDatetime;
     private String writerEmail;
     private String writerNickname;
     private String writerProfileImage;
