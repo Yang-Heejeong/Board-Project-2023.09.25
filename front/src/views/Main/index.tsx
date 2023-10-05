@@ -9,7 +9,6 @@ import BoardItem from 'components/BoardItem';
 import Pagination from 'components/Pagination';
 import { usePagination } from 'hooks';
 import { getLatestBoardListRequest } from 'apis';
-import getLatestBoardListResponseDto from 'apis/dto/response/board/get-latest-board-list.response.dto';
 import ResponseDto from 'apis/dto/response';
 import GetLatestBoardListResponseDto from 'apis/dto/response/board/get-latest-board-list.response.dto';
 

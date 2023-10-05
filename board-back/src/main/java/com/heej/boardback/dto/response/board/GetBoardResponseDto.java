@@ -53,4 +53,8 @@ public class GetBoardResponseDto extends ResponseDto {
         ResponseDto result = new ResponseDto(ResponseCode.NOT_EXIST_BOARD, ResponseMessage.NOT_EXIST_BOARD);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
+
+    public static ResponseEntity<? super GetBoardResponseDto> notExistBoard() {
+        return null;
+    }
 }
