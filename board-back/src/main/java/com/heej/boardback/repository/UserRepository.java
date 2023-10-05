@@ -27,7 +27,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
             "FROM favorite " +
             "WHERE board_number = ?1 " +
         ") ",
-        nativeQuery = true
+        nativeQuery=true
     )
     List<UserEntity> findByBoardFavorite(Integer boardNumber);
     
