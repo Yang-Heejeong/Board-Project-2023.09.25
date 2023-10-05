@@ -8,6 +8,8 @@ import com.heej.boardback.entity.BoardEntity;
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
 
+    boolean existsByBoardNumber(Integer boardNumber); 
+
 
     // 제약을 없앨 수 있다.
     // jpa에서 처리해줌
