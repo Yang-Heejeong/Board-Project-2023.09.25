@@ -22,8 +22,10 @@ import com.heej.boardback.entity.UserEntity;
 import com.heej.boardback.repository.BoardImageRepository;
 import com.heej.boardback.repository.BoardRepository;
 import com.heej.boardback.repository.BoardViewRepository;
+import com.heej.boardback.repository.CommentRepository;
 import com.heej.boardback.repository.FavoriteRepository;
 import com.heej.boardback.repository.UserRepository;
+import com.heej.boardback.repository.resultSet.CommentListResultSet;
 import com.heej.boardback.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class BoardServiceImplement implements BoardService {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
     private final BoardViewRepository boardViewRepository;
     private final BoardImageRepository boardImageRepository;
@@ -113,6 +116,27 @@ public class BoardServiceImplement implements BoardService {
     }
 
     @Override
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber) {
+
+        List<CommentListResultSet> resultSets = new ArrayList<>();
+
+        try {
+
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+            if (!existedBoard) return GetCommentListResponseDto.notExistBoard();
+            
+            resultSets = commentRepository.findByCommentList(boardNumber);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        
+        return GetCommentListResponseDto.success(resultSets);
+
+    }
+
+    @Override
     public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
 
         List<BoardViewEntity> boardViewEntities = new ArrayList<>();
@@ -157,16 +181,4 @@ public class BoardServiceImplement implements BoardService {
 
     }
 
-    @Override
-    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber) {
-
-        try {
-
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-
-    }
-    
 }
