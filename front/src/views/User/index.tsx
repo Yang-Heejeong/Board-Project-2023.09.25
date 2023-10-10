@@ -11,7 +11,7 @@ import { AUTH_PATH, BOARD_WRITE_PATH, MAIN_PATH, USER_PATH } from 'constant';
 import { getUserBoardListRequest, getUserRequest } from 'apis';
 import { GetUserResponseDto } from 'apis/dto/response/user';
 import ResponseDto from 'apis/dto/response';
-import { GetUserBoardlistResponseDto } from 'apis/dto/response/board';
+import GetUserBoardListResponseDto from 'apis/dto/response/board/get-user-board-list.response.dto';
 
 //          component: 유저 페이지          //
 export default function User() {
@@ -135,7 +135,7 @@ export default function User() {
     const [count, setCount] = useState<number>(0);
 
     //          function: get user board list response 처리 함수          //
-    const getUserBoardListResponse = (responseBody: GetUserBoardlistResponseDto | ResponseDto) => {
+    const getUserBoardListResponse = (responseBody: GetUserBoardListResponseDto | ResponseDto) => {
       const { code } = responseBody;
       if (code === 'NU') alert('존재하지 않는 유저입니다.');
       if (code === 'DBE') alert('데이터베이스 오류입니다.');
@@ -144,9 +144,9 @@ export default function User() {
         return;
       }
 
-      const { userBoardList } = responseBody as GetUserBoardlistResponseDto;
+      const { userBoardList } = responseBody as GetUserBoardListResponseDto;
       setBoardList(userBoardList);
-      setCount(UserBoardList.length)
+      setCount(userBoardList.length);
     }
 
     //          event handler: 버튼 클릭 이벤트 처리          //
