@@ -2,6 +2,8 @@ package com.heej.boardback.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -27,5 +29,9 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Integer>
         nativeQuery = true
     ) 
     List<CommentListResultSet> findByCommentList(Integer boardNumber);
+
+    // 삭제 작업.
+    @Transactional
+    void deleteByBoardNumber(Integer boardNumber);
 
 }

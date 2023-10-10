@@ -10,6 +10,7 @@ import com.heej.boardback.dto.request.board.PatchBoardRequestDto;
 import com.heej.boardback.dto.request.board.PostBoardRequestDto;
 import com.heej.boardback.dto.request.board.PostCommentRequestDto;
 import com.heej.boardback.dto.response.ResponseDto;
+import com.heej.boardback.dto.response.board.DeleteBoardResponseDto;
 import com.heej.boardback.dto.response.board.GetBoardResponseDto;
 import com.heej.boardback.dto.response.board.GetCommentListResponseDto;
 import com.heej.boardback.dto.response.board.GetFavoriteListResponseDto;
@@ -243,6 +244,36 @@ public class BoardServiceImplement implements BoardService {
         }
 
         return PatchBoardResponseDto.success();
+
+    }
+
+    @Override
+    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Integer boardNumber, String email) {
+
+        try {
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return DeleteBoardResponseDto.notExistUser();
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return DeleteBoardResponseDto.notExistBoard();
+
+            boolean isWriter = boardEntity.getWriterEmail().equals(email);
+            if (!isWriter) return DeleteBoardResponseDto.noPermission();
+
+            // 테이블에 제약 조건이 걸려 있다면 굳이 사용하지 않아도 된다.
+            commentRepository.deleteByBoardNumber(boardNumber);
+            favoriteRepository.deleteByBoardNumber(boardNumber);
+            boardImageRepository.deleteByBoardNumber(boardNumber);
+            // 참조하는 테이블이 있다면 delete가 제대로 실행되지 않음.
+            boardRepository.delete(boardEntity);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return DeleteBoardResponseDto.success();
 
     }
 
