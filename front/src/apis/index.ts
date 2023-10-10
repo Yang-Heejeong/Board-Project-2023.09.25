@@ -4,7 +4,7 @@ import { SignInResponseDto, SignUpResponseDto } from './dto/response/auth';
 import ResponseDto from './dto/response';
 import { GetSignInUserResponseDto, GetUserResponseDto } from './dto/response/user';
 import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from './dto/request/board';
-import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto, GetCommentListResponseDto, PostCommentResponseDto, PatchBoardResponseDto, DeleteBoardResponseDto } from './dto/response/board';
+import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto, GetCommentListResponseDto, PostCommentResponseDto, PatchBoardResponseDto, DeleteBoardResponseDto, GetUserBoardlistResponseDto } from './dto/response/board';
 import { error } from 'console';
 
 // description: Domain URL //
@@ -60,6 +60,8 @@ const GET_FAVORITE_LIST_URL = (boardNumber: string | number) => `${API_DOMAIN}/b
 const GET_COMMENT_LIST_URL = (boardNumber: string | number) => `${API_DOMAIN}/board/${boardNumber}/comment-list`;
 // description: get latest board list API end point //
 const GET_LATEST_BOARD_LIST_URL = () => `${API_DOMAIN}/board/latest-list`;
+// description: get user board list API end point //
+const GET_USER_BOARD_LIST_URL = (email: string) => `${API_DOMAIN}/board/user-board-list/${email}`;
 // description: post board API end point //
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
 // description: post comment API end point //
@@ -118,6 +120,21 @@ export const getLatestBoardListRequest = async () => {
     const result = await axios.get(GET_LATEST_BOARD_LIST_URL())
         .then(response => {
             const responseBody: GetLatestBoardListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+// 결과물을 추가로 내보내기 때문에 responsebody를 내보내고. 없으면 코드로 내보낸다. (약속) //
+// description: get user board list request //
+export const getUserBoardListRequest = async (email: string) => {
+    const result = await axios.get(GET_USER_BOARD_LIST_URL(email))
+        .then(response => {
+            const responseBody: GetUserBoardlistResponseDto = response.data;
             return responseBody;
         })
         .catch(error => {
