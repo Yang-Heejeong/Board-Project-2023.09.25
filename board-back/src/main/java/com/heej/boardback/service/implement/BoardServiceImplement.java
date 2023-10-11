@@ -1,6 +1,10 @@
 package com.heej.boardback.service.implement;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -15,6 +19,7 @@ import com.heej.boardback.dto.response.board.GetBoardResponseDto;
 import com.heej.boardback.dto.response.board.GetCommentListResponseDto;
 import com.heej.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.heej.boardback.dto.response.board.GetLatestBoardListResponseDto;
+import com.heej.boardback.dto.response.board.GetTop3BoardListResponseDto;
 import com.heej.boardback.dto.response.board.GetUserBoardListResponseDto;
 import com.heej.boardback.dto.response.board.IncreaseViewCountResponseDto;
 import com.heej.boardback.dto.response.board.PatchBoardResponseDto;
@@ -206,7 +211,28 @@ public class BoardServiceImplement implements BoardService {
 
         return GetUserBoardListResponseDto.success(boardViewEntities);
     }
+    
+    @Override
+    public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList() {
 
+        List<BoardViewEntity> boardViewEntities = new ArrayList<>();
+
+        try {
+
+            Date now = Date.from(Instant.now().minus(7, ChronoUnit.DAYS));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy=MM-dd HH:mm:ss");
+            String sevenDaysAgo = simpleDateFormat.format(now);
+
+            boardViewEntities = boardViewRepository.findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDesc(sevenDaysAgo);
+            
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetTop3BoardListResponseDto.success(boardViewEntities);
+
+    }
     @Override
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email) {
         
@@ -329,6 +355,8 @@ public class BoardServiceImplement implements BoardService {
         return DeleteBoardResponseDto.success();
 
     }
+
+    
 
     
 
