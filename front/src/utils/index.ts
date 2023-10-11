@@ -23,7 +23,7 @@ export const getWriteDatetimeFormat = (writeDatetime: string | undefined) => {
     if (!writeDatetime) return '';
     const date = dayjs(writeDatetime);
     return date.format('YYYY. MM. DD.');
-  };
+};
 
   export const cutString = (str: string | undefined, size: number) => {
     if (!str) return '';

@@ -19,6 +19,7 @@ import com.heej.boardback.dto.response.board.GetBoardResponseDto;
 import com.heej.boardback.dto.response.board.GetCommentListResponseDto;
 import com.heej.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.heej.boardback.dto.response.board.GetLatestBoardListResponseDto;
+import com.heej.boardback.dto.response.board.GetSearchBoardListResponseDto;
 import com.heej.boardback.dto.response.board.GetTop3BoardListResponseDto;
 import com.heej.boardback.dto.response.board.GetUserBoardListResponseDto;
 import com.heej.boardback.dto.response.board.IncreaseViewCountResponseDto;
@@ -31,12 +32,14 @@ import com.heej.boardback.entity.BoardImageEntity;
 import com.heej.boardback.entity.BoardViewEntity;
 import com.heej.boardback.entity.CommentEntity;
 import com.heej.boardback.entity.FavoriteEntity;
+import com.heej.boardback.entity.SearchLogEntity;
 import com.heej.boardback.entity.UserEntity;
 import com.heej.boardback.repository.BoardImageRepository;
 import com.heej.boardback.repository.BoardRepository;
 import com.heej.boardback.repository.BoardViewRepository;
 import com.heej.boardback.repository.CommentRepository;
 import com.heej.boardback.repository.FavoriteRepository;
+import com.heej.boardback.repository.SearchLogRepository;
 import com.heej.boardback.repository.UserRepository;
 import com.heej.boardback.repository.resultSet.CommentListResultSet;
 import com.heej.boardback.service.BoardService;
@@ -52,6 +55,7 @@ public class BoardServiceImplement implements BoardService {
     private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
     private final BoardViewRepository boardViewRepository;
+    private final SearchLogRepository searchLogRepository;
     private final BoardImageRepository boardImageRepository;
 
     @Override
@@ -233,6 +237,35 @@ public class BoardServiceImplement implements BoardService {
         return GetTop3BoardListResponseDto.success(boardViewEntities);
 
     }
+    
+    @Override
+    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardList(String searchWord, String preSearchWord) {
+
+        List<BoardViewEntity> boardViewEntities = new ArrayList<>();
+
+        try {
+
+            boardViewEntities = boardViewRepository.findByTitleContainsOrContentContainsOrderByWriteDatetimeDesc(searchWord, searchWord);
+
+            boolean relation = preSearchWord != null;
+
+            SearchLogEntity searchLogEntity = new SearchLogEntity(searchWord, preSearchWord, relation);
+            searchLogRepository.save(searchLogEntity);
+
+            if (relation) {
+                searchLogEntity = new SearchLogEntity(preSearchWord, searchWord, relation);
+                searchLogRepository.save(searchLogEntity);
+            }
+            
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetSearchBoardListResponseDto.success(boardViewEntities);
+
+    }
+
     @Override
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email) {
         
@@ -357,7 +390,4 @@ public class BoardServiceImplement implements BoardService {
     }
 
     
-
-    
-
 }
