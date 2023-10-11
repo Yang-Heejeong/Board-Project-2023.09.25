@@ -4,7 +4,7 @@ import { SignInResponseDto, SignUpResponseDto } from './dto/response/auth';
 import ResponseDto from './dto/response';
 import { GetSignInUserResponseDto, GetUserResponseDto, PatchNicknameResponseDto, PatchProfileImageResponseDto } from './dto/response/user';
 import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from './dto/request/board';
-import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto, GetCommentListResponseDto, PostCommentResponseDto, PatchBoardResponseDto, DeleteBoardResponseDto, GetUserBoardlistResponseDto, IncreaseViewCountResponseDto, GetTop3BardListResponseDto } from './dto/response/board';
+import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto, GetCommentListResponseDto, PostCommentResponseDto, PatchBoardResponseDto, DeleteBoardResponseDto, GetUserBoardlistResponseDto, IncreaseViewCountResponseDto, GetTop3BardListResponseDto, GetSearchBoardListResponseDto } from './dto/response/board';
 import { error } from 'console';
 import { PatchNicknameRequestDto, PatchProfileImageRequestDto } from './dto/request/user';
 
@@ -65,6 +65,8 @@ const GET_LATEST_BOARD_LIST_URL = () => `${API_DOMAIN}/board/latest-list`;
 const GET_USER_BOARD_LIST_URL = (email: string) => `${API_DOMAIN}/board/user-board-list/${email}`;
 // description: get top 3 board list API end point //
 const GET_TOP_3_BOARD_LIST_URL = () => `${API_DOMAIN}/board/top-3`;
+// description: get search board list API end point //
+const GET_SEARCH_BOARD_LIST_URL = (searchWord: string, preSearchWord: string | undefined) => `${API_DOMAIN}/board/search-list/${searchWord}${preSearchWord ? '/' + preSearchWord : ''}`;
 // description: post board API end point //
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
 // description: post comment API end point //
@@ -154,6 +156,20 @@ export const getTop3BoardListRequest = async () => {
     const result = await axios.get(GET_TOP_3_BOARD_LIST_URL())
         .then(response => {
             const responseBody: GetTop3BardListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+// description: get search board list request //
+export const getSearchBoardListRequest = async (searchWord: string, preSearchWord: string | undefined) => {
+    const result = await axios.get(GET_SEARCH_BOARD_LIST_URL(searchWord, preSearchWord))
+        .then(response => {
+            const responseBody: GetSearchBoardListResponseDto = response.data;
             return responseBody;
         })
         .catch(error => {
