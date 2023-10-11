@@ -14,6 +14,7 @@ public interface BoardViewRepository extends JpaRepository<BoardViewEntity, Inte
 
     List<BoardViewEntity> findByOrderByWriteDatetimeDesc();
     List<BoardViewEntity> findByWriterEmailOrderByWriteDatetimeDesc(String email);
+    // 이후에 조회순, 댓글 순으로 추가할 수 있다.
     List<BoardViewEntity> findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDesc(String writeDatetime);
 
     List<BoardViewEntity> findByWriterEmail(String email);
