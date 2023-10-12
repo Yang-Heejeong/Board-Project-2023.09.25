@@ -7,6 +7,7 @@ import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from
 import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto, GetCommentListResponseDto, PostCommentResponseDto, PatchBoardResponseDto, DeleteBoardResponseDto, GetUserBoardlistResponseDto, IncreaseViewCountResponseDto, GetTop3BardListResponseDto, GetSearchBoardListResponseDto } from './dto/response/board';
 import { error } from 'console';
 import { PatchNicknameRequestDto, PatchProfileImageRequestDto } from './dto/request/user';
+import { GetPopularListResponseDto } from './dto/response/search';
 
 // description: Domain URL //
 const DOMAIN = 'http://localhost:4000';
@@ -271,6 +272,22 @@ export const deleteBoardRequest = async (boardNumber: string | number, token: st
             const responseBody: ResponseDto = error.response.data;
             const { code } = responseBody;
             return code;
+        });
+    return result;
+}
+
+// description: get popular list API end point //
+const GET_POPULAR_LIST_URL = () => `${API_DOMAIN}/search/popular-list`;
+// description: get popular list request //
+export const getPopularListRequest = async() => {
+    const result = await axios.get(GET_POPULAR_LIST_URL())
+        .then(response => {
+            const responseBody: GetPopularListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
         });
     return result;
 }
