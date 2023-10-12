@@ -7,7 +7,7 @@ import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from
 import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto, GetCommentListResponseDto, PostCommentResponseDto, PatchBoardResponseDto, DeleteBoardResponseDto, GetUserBoardlistResponseDto, IncreaseViewCountResponseDto, GetTop3BardListResponseDto, GetSearchBoardListResponseDto } from './dto/response/board';
 import { error } from 'console';
 import { PatchNicknameRequestDto, PatchProfileImageRequestDto } from './dto/request/user';
-import { GetPopularListResponseDto } from './dto/response/search';
+import { GetPopularListResponseDto, GetRelationListResponseDto } from './dto/response/search';
 
 // description: Domain URL //
 const DOMAIN = 'http://localhost:4000';
@@ -278,11 +278,27 @@ export const deleteBoardRequest = async (boardNumber: string | number, token: st
 
 // description: get popular list API end point //
 const GET_POPULAR_LIST_URL = () => `${API_DOMAIN}/search/popular-list`;
+// description: get relation list API end point //
+const GET_RELATION_LIST_URL = (searchWord: string) => `${API_DOMAIN}/search/${searchWord}/relation-list`;
+
 // description: get popular list request //
-export const getPopularListRequest = async() => {
+export const getPopularListRequest = async () => {
     const result = await axios.get(GET_POPULAR_LIST_URL())
         .then(response => {
             const responseBody: GetPopularListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+// description: get relation list request //
+export const getRelationListRequest = async (searchWord: string) => {
+    const result = await axios.get(GET_RELATION_LIST_URL(searchWord))
+        .then(response => {
+            const responseBody: GetRelationListResponseDto = response.data;
             return responseBody;
         })
         .catch(error => {
